@@ -16,7 +16,6 @@ activityData <- read.csv(file="activity.csv", header=TRUE)
 ```
 
 
-
 ## What is mean total number of steps taken per day?
 ```{r mean_steps,echo=TRUE}
 totalSteps <- aggregate(steps ~ date, activityData, FUN=sum)
@@ -28,8 +27,8 @@ hist(totalSteps$steps,
 meanSteps <- mean(totalSteps$steps, na.rm = TRUE)
 medSteps <- median(totalSteps$steps, na.rm = TRUE)
 ```
-
-
+Mean Number of Steps Taken per Day `r meanSteps`,
+Median Number of Steps Taken per Day `r medSteps`
 
 ## What is the average daily activity pattern?
 ```{r echo=TRUE}
@@ -50,7 +49,12 @@ maxInt <- meanStepsByInt[which.max(meanStepsByInt$steps),]
 ## Imputing missing values
 ```{r echo=TRUE}
 missingVals <- is.na(activityData$steps)
+missCount <- sum(missingVals)
+```
 
+There are `r missCount` missing values. I will replace these missing values with the 5-day average of that respective interval.
+
+```{r echo=TRUE}
 imp_activityData <- transform(activityData,
                               steps = ifelse(is.na(activityData$steps),
                                              meanStepsByInt$steps[match(activityData$interval, 
@@ -68,7 +72,7 @@ diffMed = impMedSteps - medSteps
 diffTotal = sum(impStepsByInt$steps) - sum(totalSteps$steps)
 ```
 
-
+There is a difference of `r diffMean` in the mean steps of the two dataset. There is a difference of `r diffMed` in the median steps of the two dataset. There is a difference of `r diffTotal` in the total steps of the two dataset.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 ```{r echo=TRUE}

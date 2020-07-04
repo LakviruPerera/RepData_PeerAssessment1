@@ -17,7 +17,6 @@ activityData <- read.csv(file="activity.csv", header=TRUE)
 ```
 
 
-
 ## What is mean total number of steps taken per day?
 
 ```r
@@ -34,8 +33,8 @@ hist(totalSteps$steps,
 meanSteps <- mean(totalSteps$steps, na.rm = TRUE)
 medSteps <- median(totalSteps$steps, na.rm = TRUE)
 ```
-
-
+Mean Number of Steps Taken per Day 1.0766189\times 10^{4},
+Median Number of Steps Taken per Day 10765
 
 ## What is the average daily activity pattern?
 
@@ -62,7 +61,13 @@ maxInt <- meanStepsByInt[which.max(meanStepsByInt$steps),]
 
 ```r
 missingVals <- is.na(activityData$steps)
+missCount <- sum(missingVals)
+```
 
+There are 2304 missing values. I will replace these missing values with the 5-day average of that respective interval.
+
+
+```r
 imp_activityData <- transform(activityData,
                               steps = ifelse(is.na(activityData$steps),
                                              meanStepsByInt$steps[match(activityData$interval, 
@@ -74,7 +79,7 @@ hist(impStepsByInt$steps,
      xlab = "Number of Steps")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
 
 ```r
 impMeanSteps <- mean(impStepsByInt$steps, na.rm = TRUE)
@@ -84,7 +89,7 @@ diffMed = impMedSteps - medSteps
 diffTotal = sum(impStepsByInt$steps) - sum(totalSteps$steps)
 ```
 
-
+There is a difference of 0 in the mean steps of the two dataset. There is a difference of 1.1886792 in the median steps of the two dataset. There is a difference of 8.6129509\times 10^{4} in the total steps of the two dataset.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -111,4 +116,4 @@ ggplot(data = meanStepsByDay, aes(x = interval, y = steps)) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
